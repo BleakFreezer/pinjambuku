@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buku Saya - PinjamBuku.</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="Image/favicon.ico" type="image/x-icon" />
+    <style>
+      html {
+        scrollbar-gutter: stable;
+      }
+
+      .borrowed-header {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: linear-gradient(
+          360deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: white;
+        margin-bottom: 3rem;
+      }
+
+      .borrowed-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .borrowed-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      .borrowed-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .stat-card .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        display: block;
+      }
+
+      .stat-card .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.8;
+      }
+
+      .borrowed-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem 3rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .borrowed-tabs {
+        display: flex;
+        gap: 0;
+        margin: 0 0 2rem 0;
+        border-bottom: 3px solid var(--border-color);
+        height: fit-content;
+        justify-content: flex-start;
+        width: 100%;
+        padding: 0;
+      }
+
+      .borrowed-tab {
+        padding: 1rem 2rem;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        font-weight: bold;
+        color: var(--text-light);
+        transition: color 0.3s, border-bottom-color 0.3s;
+        white-space: nowrap;
+        margin: 0;
+        line-height: 1.5;
+        box-sizing: border-box;
+        font-size: 1rem;
+      }
+
+      .borrowed-tab.active {
+        color: var(--primary-color);
+        border-bottom: 3px solid var(--primary-color);
+        background: none;
+      }
+
+      .borrowed-tab:hover {
+        color: var(--primary-color);
+      }
+
+      .borrowed-content {
+        display: none;
+      }
+
+      .borrowed-content.active {
+        display: block;
+      }
+
+      .book-return-date {
+        background: #fff3cd;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: #856404;
+      }
+
+      .book-return-date.urgent {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .empty-borrowed {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: var(--light-bg);
+        border-radius: 12px;
+        margin-bottom: 2rem;
+      }
+
+      .empty-borrowed-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+      }
+
+      .empty-borrowed h3 {
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+      }
+
+      .empty-borrowed p {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+      }
+
+      .empty-borrowed .btn {
+        margin-top: 1rem;
+      }
+
+      .book-card.borrowed {
+        border-left: 4px solid var(--primary-color);
+        width: 120%;
+      }
+
+      .book-card.overdue {
+        border-left: 4px solid #dc3545;
+      }
+
+      .overdue-badge {
+        background: #dc3545;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin-left: 0.5rem;
+      }
+
+      .books-grid {
+        gap: 4rem;
+      }
+
+      @media (max-width: 768px) {
+        .borrowed-header h1 {
+          font-size: 1.8rem;
+        }
+
+        .borrowed-stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .borrowed-tabs {
+          flex-wrap: wrap;
+        }
+
+        .borrowed-tab {
+          padding: 0.8rem 1rem;
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="logo" onclick="window.location.href='index.html'">
+          📚 PinjamBuku.
+        </div>
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">Beranda</a>
+          <a href="library.html" class="nav-link">Katalog</a>
+          <a href="borrowed.html" class="nav-link active">Buku Saya</a>
+          <a href="index.html#about" class="nav-link">Tentang</a>
+        </div>
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          aria-label="Toggle dark mode"
+        >
+          <svg
+            class="sun-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg
+            class="moon-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+        <button class="burger-menu" id="burgerMenu" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="borrowed-header">
+      <h1>📖 Buku yang Sedang Dipinjam</h1>
+      <p>Kelola buku-buku pinjaman Anda di sini</p>
+      <div class="borrowed-stats">
+        <div class="stat-card">
+          <span class="stat-value" id="totalBorrowed">0</span>
+          <span class="stat-label">Total Dipinjam</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="overdueCount">0</span>
+          <span class="stat-label">Terlambat Dikembalikan</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="returningSoon">0</span>
+          <span class="stat-label">Kembali Minggu Ini</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="borrowed-container">
+      <!-- Tabs -->
+      <div class="borrowed-tabs">
+        <button class="borrowed-tab active" onclick="switchBorrowedTab('all')">
+          📚 Semua Buku
+        </button>
+        <button class="borrowed-tab" onclick="switchBorrowedTab('overdue')">
+          ⚠️ Terlambat Dikembalikan
+        </button>
+        <button class="borrowed-tab" onclick="switchBorrowedTab('upcoming')">
+          🗓️ Kembali Segera
+        </button>
+      </div>
+
+      <!-- All Books Tab -->
+      <div id="allTab" class="borrowed-content active">
+        <div id="allBooksContainer" class="books-grid"></div>
+        <div id="allEmpty" class="empty-borrowed" style="display: none">
+          <div class="empty-borrowed-icon">📭</div>
+          <h3>Belum Ada Buku Pinjaman</h3>
+          <p>Anda belum meminjam buku apapun. Mulai jelajahi katalog kami!</p>
+          <a
+            href="library.html"
+            class="btn btn-detail"
+            style="text-decoration: none"
+            >Cari Buku</a
+          >
+        </div>
+      </div>
+
+      <!-- Overdue Books Tab -->
+      <div id="overdueTab" class="borrowed-content">
+        <div id="overdueBooksContainer" class="books-grid"></div>
+        <div id="overdueEmpty" class="empty-borrowed" style="display: none">
+          <div class="empty-borrowed-icon">✅</div>
+          <h3>Tidak Ada Buku yang Terlambat Dikembalikan</h3>
+          <p>Semua buku pinjaman Anda sudah tepat waktu. Bagus!</p>
+        </div>
+      </div>
+
+      <!-- Upcoming Return Tab -->
+      <div id="upcomingTab" class="borrowed-content">
+        <div id="upcomingBooksContainer" class="books-grid"></div>
+        <div id="upcomingEmpty" class="empty-borrowed" style="display: none">
+          <div class="empty-borrowed-icon">📅</div>
+          <h3>Tidak Ada Pengembalian Minggu Ini</h3>
+          <p>Tidak ada buku yang perlu dikembalikan minggu ini.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>
+        &copy; 2025 PinjamBuku. - Perpustakaan Digital Sekolah. All rights
+        reserved.
+      </p>
+      <p>Powered by Google Books API & OpenLibrary API</p>
+    </footer>
+
+    <!-- Modal untuk detail buku -->
+    <div id="bookModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <div id="modalBody"></div>
+      </div>
+    </div>
+
+    <script src="language.js"></script>
+    <script src="borrowed.js"></script>
+    <script src="page-transition.js"></script>
+    <script>
+      // Initialize theme from localStorage
+      function initializeTheme() {
+        const savedTheme = localStorage.getItem("theme");
+        const html = document.documentElement;
+
+        if (savedTheme) {
+          if (savedTheme === "dark") {
+            html.classList.add("dark-mode");
+            updateThemeIcon(true);
+          }
+        } else {
+          if (
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+          ) {
+            html.classList.add("dark-mode");
+            updateThemeIcon(true);
+          }
+        }
+      }
+
+      function toggleTheme() {
+        const html = document.documentElement;
+
+        // Add transition class
+        html.classList.add("theme-transitioning");
+
+        const isDarkMode = html.classList.toggle("dark-mode");
+
+        localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+
+        // Remove transition class after animation completes
+        setTimeout(() => {
+          html.classList.remove("theme-transitioning");
+        }, 400);
+
+        updateThemeIcon(isDarkMode);
+
+        const themeToggle = document.getElementById("themeToggle");
+        if (themeToggle) {
+          themeToggle.classList.add("active");
+          setTimeout(() => {
+            themeToggle.classList.remove("active");
+          }, 600);
+        }
+      }
+
+      function updateThemeIcon(isDarkMode) {
+        // Icon transition handled by CSS now
+        // Just need to toggle the dark-mode class which is already done
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initializeTheme();
+        const themeToggle = document.getElementById("themeToggle");
+        if (themeToggle) {
+          themeToggle.addEventListener("click", toggleTheme);
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library - PinjamBuku.</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="Image/favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="logo" onclick="window.location.href='index.html'">
+          📚 PinjamBuku.
+        </div>
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">Beranda</a>
+          <a href="library.html" class="nav-link">Katalog</a>
+          <a href="borrowed.html" class="nav-link">Buku Saya</a>
+          <a href="index.html#about" class="nav-link">Tentang</a>
+        </div>
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          aria-label="Toggle dark mode"
+        >
+          <svg
+            class="sun-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg
+            class="moon-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+        <button class="burger-menu" id="burgerMenu" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="search-hero">
+      <div class="hero-content">
+        <h1>Katalog Buku</h1>
+        <div class="search-container">
+          <input
+            type="text"
+            id="searchInput"
+            class="search-input"
+            placeholder="Cari judul buku, penulis, atau kategori..."
+          />
+          <button id="searchBtn" class="search-btn">Cari</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories" id="categoriesSection">
+      <h2>Kategori Populer</h2>
+      <div class="categories-grid">
+        <button class="category-btn" data-category="education">
+          📖 Pendidikan
+        </button>
+        <button class="category-btn" data-category="fiction">
+          📚 Fiksi & Novel
+        </button>
+        <button class="category-btn" data-category="science">🔬 Sains</button>
+        <button class="category-btn" data-category="history">📜 Sejarah</button>
+        <button class="category-btn" data-category="self-help">
+          💡 Pengembangan Diri
+        </button>
+        <button class="category-btn" data-category="business">💼 Bisnis</button>
+      </div>
+    </section>
+
+    <!-- Search Results -->
+    <section class="search-results" id="searchResults">
+      <div class="results-header">
+        <h2 id="resultsTitle">Hasil Pencarian</h2>
+        <p id="resultsInfo" class="results-info"></p>
+      </div>
+      <div id="resultsContainer" class="books-grid"></div>
+    </section>
+
+    <!-- My Books (Borrowed) -->
+    <section class="my-books" id="borrowedSection" style="display: none">
+      <h2>Buku yang Sedang Dipinjam</h2>
+      <div id="borrowedContainer" class="books-grid"></div>
+      <p id="noBorrowedMsg" class="empty-message">
+        Belum ada buku yang dipinjam
+      </p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>
+        &copy; 2025 PinjamBuku. - Perpustakaan Digital Sekolah. All rights
+        reserved.
+      </p>
+      <p>Powered by Google Books API & OpenLibrary API</p>
+    </footer>
+
+    <!-- Modal untuk detail buku -->
+    <div id="bookModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <div id="modalBody"></div>
+      </div>
+    </div>
+
+    <script src="language.js"></script>
+    <script src="style-library.js"></script>
+    <script src="page-transition.js"></script>
+    <script>
+      // Initialize theme from localStorage
+      function initializeTheme() {
+        const savedTheme = localStorage.getItem("theme");
+        const html = document.documentElement;
+
+        if (savedTheme) {
+          if (savedTheme === "dark") {
+            html.classList.add("dark-mode");
+            updateThemeIcon(true);
+          }
+        } else {
+          if (
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+          ) {
+            html.classList.add("dark-mode");
+            updateThemeIcon(true);
+          }
+        }
+      }
+
+      function toggleTheme() {
+        const html = document.documentElement;
+
+        // Add transition class
+        html.classList.add("theme-transitioning");
+
+        const isDarkMode = html.classList.toggle("dark-mode");
+
+        localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+
+        // Remove transition class after animation completes
+        setTimeout(() => {
+          html.classList.remove("theme-transitioning");
+        }, 400);
+
+        updateThemeIcon(isDarkMode);
+
+        const themeToggle = document.getElementById("themeToggle");
+        if (themeToggle) {
+          themeToggle.classList.add("active");
+          setTimeout(() => {
+            themeToggle.classList.remove("active");
+          }, 600);
+        }
+      }
+
+      function updateThemeIcon(isDarkMode) {
+        // Icon transition handled by CSS now
+        // Just need to toggle the dark-mode class which is already done
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initializeTheme();
+        const themeToggle = document.getElementById("themeToggle");
+        if (themeToggle) {
+          themeToggle.addEventListener("click", toggleTheme);
+        }
+      });
+    </script>
+  </body>
+</html>

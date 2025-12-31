@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PinjamBuku. - Perpustakaan Digital Sekolah</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="Image/favicon.ico" type="image/x-icon" />
+    <style>
+      /* Navbar scroll effect untuk index.html */
+      .navbar {
+        background: transparent;
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 1;
+        transform: translateY(-10px);
+      }
+
+      .navbar.scrolled {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Override dark mode navbar agar tetap transparan di index.html */
+      html.dark-mode .navbar {
+        background: transparent;
+      }
+
+      html.dark-mode .navbar.scrolled {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+      }
+
+      /* Perluas hero-content khusus index.html */
+      .hero .hero-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Perluas meteors effect khusus index.html */
+      .hero .meteors-container {
+        top: -20vh;
+        height: calc(100% + 40vh);
+      }
+
+      /* Geser hero keatas untuk hilangkan whitespace */
+      .hero {
+        margin-top: -80px;
+        padding-top: 80px;
+        height: 70vh !important;
+        min-height: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="logo" onclick="window.location.href='index.html'">
+          📚 PinjamBuku.
+        </div>
+        <div class="nav-links">
+          <a href="#home" class="nav-link">Beranda</a>
+          <a href="library.html" class="nav-link">Katalog</a>
+          <a href="borrowed.html" class="nav-link">Buku Saya</a>
+          <a href="#about" class="nav-link">Tentang</a>
+        </div>
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          aria-label="Toggle dark mode"
+        >
+          <svg
+            class="sun-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg
+            class="moon-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+        <button class="burger-menu" id="burgerMenu" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+      <!-- Slideshow Container -->
+      <div class="hero-slide-container">
+        <!-- Slide 1 -->
+        <div class="hero-slide active" data-slide="0">
+          <img src="Image/Library/book1.webp" alt="Book 1" class="hero-image" />
+          <div class="hero-overlay"></div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="hero-slide" data-slide="1">
+          <img src="Image/Library/book2.webp" alt="Book 2" class="hero-image" />
+          <div class="hero-overlay"></div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="hero-slide" data-slide="2">
+          <img src="Image/Library/book3.webp" alt="Book 3" class="hero-image" />
+          <div class="hero-overlay"></div>
+        </div>
+        <!-- Slide 4 -->
+        <div class="hero-slide" data-slide="3">
+          <img src="Image/Library/book4.webp" alt="Book 4" class="hero-image" />
+          <div class="hero-overlay"></div>
+        </div>
+        <!-- Clone Slide 1 untuk infinite loop -->
+        <div class="hero-slide" data-slide="0">
+          <img src="Image/Library/book1.webp" alt="Book 1" class="hero-image" />
+          <div class="hero-overlay"></div>
+        </div>
+      </div>
+
+      <!-- Meteors Container -->
+      <div class="meteors-container"></div>
+
+      <!-- Hero Content -->
+      <div class="hero-content">
+        <h1 class="aurora-text">Perpustakaan Digital Sekolah</h1>
+        <p>Pinjam buku sekolah favorit kamu dengan mudah dan cepat</p>
+        <div class="search-container">
+          <input
+            type="text"
+            id="searchInput"
+            class="search-input"
+            placeholder="Cari judul buku, penulis, atau kategori..."
+          />
+          <button id="searchBtn" class="search-btn">Cari</button>
+        </div>
+      </div>
+
+      <!-- Navigation Dots -->
+      <div class="hero-dots">
+        <span class="dot active" data-slide="0"></span>
+        <span class="dot" data-slide="1"></span>
+        <span class="dot" data-slide="2"></span>
+        <span class="dot" data-slide="3"></span>
+      </div>
+
+      <!-- Navigation Arrows -->
+      <button class="hero-arrow prev" aria-label="Previous slide">❮</button>
+      <button class="hero-arrow next" aria-label="Next slide">❯</button>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories" id="categories">
+      <h2>Kategori Populer</h2>
+      <div class="categories-grid">
+        <button class="category-btn" data-category="education">
+          📖 Pendidikan
+        </button>
+        <button class="category-btn" data-category="fiction">
+          📚 Fiksi & Novel
+        </button>
+        <button class="category-btn" data-category="science">🔬 Sains</button>
+        <button class="category-btn" data-category="history">📜 Sejarah</button>
+        <button class="category-btn" data-category="self-help">
+          💡 Pengembangan Diri
+        </button>
+        <button class="category-btn" data-category="business">💼 Bisnis</button>
+      </div>
+    </section>
+
+    <!-- Featured Books -->
+    <section class="featured-books">
+      <h2>Buku Rekomendasi Hari Ini</h2>
+      <div id="featuredContainer" class="books-grid"></div>
+    </section>
+
+    <!-- Search Results -->
+    <section class="search-results" id="searchResults" style="display: none">
+      <h2>Hasil Pencarian</h2>
+      <div id="resultsContainer" class="books-grid"></div>
+    </section>
+
+    <!-- My Books (Borrowed) -->
+    <section class="my-books" id="borrowed" style="display: none">
+      <h2>Buku yang Sedang Dipinjam</h2>
+      <div id="borrowedContainer" class="books-grid"></div>
+      <p id="noBorrowedMsg" class="empty-message">
+        Belum ada buku yang dipinjam
+      </p>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+      <h2>Tentang <strong>PinjamBuku.</strong></h2>
+      <div class="about-content">
+        <p>
+          <strong>PinjamBuku.</strong> adalah platform perpustakaan digital yang
+          memudahkan siswa sekolah untuk menemukan dan meminjam buku-buku
+          berkualitas. Dengan integrasi Google Books API & OpenLibrary API, kami
+          menyediakan akses ke jutaan buku dari seluruh dunia.
+        </p>
+        <div class="features">
+          <div class="feature">
+            <h3>🔍 Pencarian Mudah</h3>
+            <p>Cari buku berdasarkan judul, penulis, atau kategori</p>
+          </div>
+          <div class="feature">
+            <h3>📱 Responsive Design</h3>
+            <p>Akses dari perangkat apapun dengan mudah</p>
+          </div>
+          <div class="feature">
+            <h3>⭐ Rating & Review</h3>
+            <p>Lihat rating buku dari pembaca lain</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>
+        &copy; 2025 PinjamBuku. - Perpustakaan Digital Sekolah. All rights
+        reserved.
+      </p>
+      <p>Powered by Google Books API & OpenLibrary API</p>
+    </footer>
+
+    <!-- Modal untuk detail buku -->
+    <div id="bookModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <div id="modalBody"></div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="page-transition.js"></script>
+    <script>
+      // Navbar scroll effect - HANYA DI INDEX.HTML
+      document.addEventListener("DOMContentLoaded", () => {
+        const navbar = document.querySelector(".navbar");
+        const heroSection = document.querySelector(".hero");
+
+        // Hanya jalankan di halaman index.html
+        if (heroSection && navbar) {
+          const handleScroll = () => {
+            // Trigger saat scroll lebih dari hero height / 2
+            const triggerPoint = heroSection.offsetHeight / 2;
+
+            if (window.scrollY > triggerPoint) {
+              navbar.classList.add("scrolled");
+            } else {
+              navbar.classList.remove("scrolled");
+            }
+          };
+
+          window.addEventListener("scroll", handleScroll);
+          // Cleanup
+          return () => window.removeEventListener("scroll", handleScroll);
+        }
+      });
+    </script>
+  </body>
+</html>

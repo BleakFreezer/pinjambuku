@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PinjamBuku. - Admin Dashboard (Test)</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="../Image/favicon.ico" type="image/x-icon" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary-color: #6366f1;
+        --secondary-color: #ec4899;
+        --success-color: #10b981;
+        --danger-color: #ef4444;
+        --warning-color: #f59e0b;
+        --dark-bg: #0f172a;
+        --dark-card: #1e293b;
+        --light-text: #f1f5f9;
+        --border-color: #334155;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: var(--dark-bg);
+        color: var(--light-text);
+        line-height: 1.6;
+      }
+
+      /* =============== NAVBAR =============== */
+      .navbar {
+        background: var(--dark-card);
+        border-bottom: 1px solid var(--border-color);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .navbar-logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        text-decoration: none;
+      }
+
+      .navbar-links {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+      }
+
+      .navbar-links a {
+        color: var(--light-text);
+        text-decoration: none;
+        transition: color 0.3s;
+        font-size: 0.9rem;
+      }
+
+      .navbar-links a:hover {
+        color: var(--primary-color);
+      }
+
+      .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding-left: 1rem;
+        border-left: 1px solid var(--border-color);
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .logout-btn {
+        background: var(--danger-color);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .logout-btn:hover {
+        background: #dc2626;
+      }
+
+      /* =============== LAYOUT =============== */
+      .container {
+        display: flex;
+        height: calc(100vh - 70px);
+      }
+
+      /* =============== SIDEBAR =============== */
+      .sidebar {
+        width: 250px;
+        background: var(--dark-card);
+        border-right: 1px solid var(--border-color);
+        padding: 2rem 0;
+        overflow-y: auto;
+        position: sticky;
+        top: 70px;
+        height: calc(100vh - 70px);
+      }
+
+      .sidebar-menu {
+        list-style: none;
+      }
+
+      .sidebar-menu li {
+        margin-bottom: 0.5rem;
+      }
+
+      .sidebar-menu a {
+        display: block;
+        padding: 0.75rem 1.5rem;
+        color: var(--light-text);
+        text-decoration: none;
+        transition: all 0.3s;
+        border-left: 3px solid transparent;
+      }
+
+      .sidebar-menu a:hover,
+      .sidebar-menu a.active {
+        background: rgba(99, 102, 241, 0.1);
+        color: var(--primary-color);
+        border-left-color: var(--primary-color);
+      }
+
+      /* =============== MAIN CONTENT =============== */
+      .main-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem;
+        background: var(--dark-bg);
+      }
+
+      .page-header {
+        margin-bottom: 2rem;
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .page-header p {
+        color: #94a3b8;
+      }
+
+      /* =============== CARDS & GRID =============== */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: var(--dark-card);
+        border: 1px solid var(--border-color);
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        transition: all 0.3s;
+      }
+
+      .stat-card:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(99, 102, 241, 0.15);
+      }
+
+      .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .stat-label {
+        color: #94a3b8;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--primary-color);
+      }
+
+      /* =============== BUTTONS =============== */
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
+      }
+
+      .btn-secondary {
+        background: var(--dark-card);
+        color: var(--light-text);
+        border: 1px solid var(--border-color);
+      }
+
+      .btn-secondary:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+      }
+
+      .btn-danger {
+        background: var(--danger-color);
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background: #dc2626;
+      }
+
+      .btn-success {
+        background: var(--success-color);
+        color: white;
+      }
+
+      .btn-success:hover {
+        background: #059669;
+      }
+
+      /* =============== TABLES =============== */
+      .table-container {
+        background: var(--dark-card);
+        border: 1px solid var(--border-color);
+        border-radius: 0.75rem;
+        overflow-x: auto;
+        margin-bottom: 2rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      thead {
+        background: rgba(99, 102, 241, 0.1);
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+
+      td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      tbody tr:hover {
+        background: rgba(99, 102, 241, 0.05);
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .badge-success {
+        background: rgba(16, 185, 129, 0.2);
+        color: var(--success-color);
+      }
+
+      .badge-warning {
+        background: rgba(245, 158, 11, 0.2);
+        color: var(--warning-color);
+      }
+
+      .badge-danger {
+        background: rgba(239, 68, 68, 0.2);
+        color: var(--danger-color);
+      }
+
+      /* =============== FORMS =============== */
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--light-text);
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 0.75rem;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        color: var(--light-text);
+        font-family: inherit;
+        transition: border-color 0.3s;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+
+      /* =============== MODAL =============== */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background: var(--dark-card);
+        border: 1px solid var(--border-color);
+        border-radius: 0.75rem;
+        padding: 2rem;
+        width: 90%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .modal-header h2 {
+        font-size: 1.5rem;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--light-text);
+        transition: color 0.3s;
+      }
+
+      .close-btn:hover {
+        color: var(--danger-color);
+      }
+
+      /* =============== RESPONSIVE =============== */
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: static;
+          border-right: none;
+          border-bottom: 1px solid var(--border-color);
+          display: none;
+        }
+
+        .sidebar.active {
+          display: block;
+        }
+
+        .main-content {
+          padding: 1rem;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .navbar-links {
+          gap: 1rem;
+        }
+      }
+
+      /* =============== ANIMATIONS =============== */
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .page-header {
+        animation: slideIn 0.5s ease-out;
+      }
+
+      .stats-grid {
+        animation: slideIn 0.5s ease-out 0.1s backwards;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <a href="index.html" class="navbar-logo">📚 PinjamBuku. Admin (Test)</a>
+      <div class="navbar-links">
+        <a href="#dashboard">Dashboard</a>
+        <a href="#books">Buku</a>
+        <a href="#users">Pengguna</a>
+        <a href="#borrowed">Peminjaman</a>
+        <a href="#reports">Laporan</a>
+        <div class="user-profile">
+          <div class="user-avatar">AD</div>
+          <div>
+            <div style="font-size: 0.9rem; font-weight: 600">Admin</div>
+            <div style="font-size: 0.8rem; color: #94a3b8">Superuser</div>
+          </div>
+          <button class="logout-btn">Logout</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <ul class="sidebar-menu">
+          <li>
+            <a href="#dashboard" class="sidebar-link active">📊 Dashboard</a>
+          </li>
+          <li><a href="#books" class="sidebar-link">📖 Manajemen Buku</a></li>
+          <li>
+            <a href="#users" class="sidebar-link">👥 Manajemen Pengguna</a>
+          </li>
+          <li><a href="#borrowed" class="sidebar-link">🔄 Peminjaman</a></li>
+          <li><a href="#categories" class="sidebar-link">🏷️ Kategori</a></li>
+          <li><a href="#reports" class="sidebar-link">📈 Laporan</a></li>
+          <li><a href="#settings" class="sidebar-link">⚙️ Pengaturan</a></li>
+        </ul>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="page-section">
+          <div class="page-header">
+            <h1>Dashboard</h1>
+            <p>Selamat datang di Admin Panel PinjamBuku.</p>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">📚</div>
+              <div class="stat-label">Total Buku</div>
+              <div class="stat-value">1,234</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">👥</div>
+              <div class="stat-label">Total Pengguna</div>
+              <div class="stat-value">567</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">🔄</div>
+              <div class="stat-label">Peminjaman Aktif</div>
+              <div class="stat-value">89</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">⚠️</div>
+              <div class="stat-label">Keterlambatan</div>
+              <div class="stat-value">12</div>
+            </div>
+          </div>
+
+          <!-- Recent Borrowings -->
+          <div
+            style="
+              background: var(--dark-card);
+              border: 1px solid var(--border-color);
+              border-radius: 0.75rem;
+              padding: 1.5rem;
+              margin-bottom: 2rem;
+            "
+          >
+            <h2 style="margin-bottom: 1.5rem">Peminjaman Terbaru</h2>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Judul Buku</th>
+                    <th>Peminjam</th>
+                    <th>Tanggal Pinjam</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Laskar Pelangi</td>
+                    <td>Budi Santoso</td>
+                    <td>2025-01-10</td>
+                    <td><span class="badge badge-success">Aktif</span></td>
+                    <td>
+                      <button
+                        class="btn btn-primary"
+                        style="padding: 0.5rem 1rem; font-size: 0.8rem"
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Harry Potter</td>
+                    <td>Siti Nurhaliza</td>
+                    <td>2025-01-08</td>
+                    <td>
+                      <span class="badge badge-warning">Jatuh Tempo</span>
+                    </td>
+                    <td>
+                      <button
+                        class="btn btn-primary"
+                        style="padding: 0.5rem 1rem; font-size: 0.8rem"
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Apa itu Filosofi</td>
+                    <td>Ahmad Riyadh</td>
+                    <td>2025-01-15</td>
+                    <td><span class="badge badge-success">Aktif</span></td>
+                    <td>
+                      <button
+                        class="btn btn-primary"
+                        style="padding: 0.5rem 1rem; font-size: 0.8rem"
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Books Section -->
+        <section id="books" class="page-section" style="display: none">
+          <div class="page-header">
+            <h1>Manajemen Buku</h1>
+            <p>Kelola semua buku dalam sistem perpustakaan</p>
+          </div>
+          <button class="btn btn-primary" onclick="openAddBookModal()">
+            + Tambah Buku
+          </button>
+          <div class="table-container" style="margin-top: 1.5rem">
+            <table>
+              <thead>
+                <tr>
+                  <th>Judul</th>
+                  <th>Penulis</th>
+                  <th>Kategori</th>
+                  <th>Stok</th>
+                  <th>Tahun</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Laskar Pelangi</td>
+                  <td>Andrea Hirata</td>
+                  <td>Fiksi</td>
+                  <td>15</td>
+                  <td>2005</td>
+                  <td>
+                    <button
+                      class="btn btn-secondary"
+                      style="padding: 0.4rem 0.8rem; font-size: 0.8rem"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      class="btn btn-danger"
+                      style="padding: 0.4rem 0.8rem; font-size: 0.8rem"
+                    >
+                      Hapus
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Users Section -->
+        <section id="users" class="page-section" style="display: none">
+          <div class="page-header">
+            <h1>Manajemen Pengguna</h1>
+            <p>Kelola akun pengguna sistem</p>
+          </div>
+          <button class="btn btn-primary" onclick="openAddUserModal()">
+            + Tambah Pengguna
+          </button>
+          <div class="table-container" style="margin-top: 1.5rem">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Bergabung</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Budi Santoso</td>
+                  <td>budi@email.com</td>
+                  <td>User</td>
+                  <td>2025-01-01</td>
+                  <td>
+                    <button
+                      class="btn btn-secondary"
+                      style="padding: 0.4rem 0.8rem; font-size: 0.8rem"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      class="btn btn-danger"
+                      style="padding: 0.4rem 0.8rem; font-size: 0.8rem"
+                    >
+                      Hapus
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Modal Tambah Buku -->
+    <div id="bookModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Tambah Buku Baru</h2>
+          <button class="close-btn" onclick="closeModal('bookModal')">
+            &times;
+          </button>
+        </div>
+        <form id="bookForm">
+          <div class="form-group">
+            <label>Judul Buku</label>
+            <input type="text" required />
+          </div>
+          <div class="form-group">
+            <label>Penulis</label>
+            <input type="text" required />
+          </div>
+          <div class="form-group">
+            <label>Penerbit</label>
+            <input type="text" required />
+          </div>
+          <div class="form-group">
+            <label>Kategori</label>
+            <select required>
+              <option>Pilih Kategori</option>
+              <option>Fiksi</option>
+              <option>Non-Fiksi</option>
+              <option>Pendidikan</option>
+              <option>Sejarah</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tahun Terbit</label>
+            <input type="number" required />
+          </div>
+          <div class="form-group">
+            <label>Stok</label>
+            <input type="number" required />
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%">
+            Simpan
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Tambah Pengguna -->
+    <div id="userModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Tambah Pengguna</h2>
+          <button class="close-btn" onclick="closeModal('userModal')">
+            &times;
+          </button>
+        </div>
+        <form id="userForm">
+          <div class="form-group">
+            <label>Nama Lengkap</label>
+            <input type="text" required />
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" required />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" required />
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <select required>
+              <option>User</option>
+              <option>Admin</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%">
+            Tambah Pengguna
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

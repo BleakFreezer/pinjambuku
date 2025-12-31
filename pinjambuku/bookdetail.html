@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detail Buku - PinjamBuku.</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="Image/favicon.ico" type="image/x-icon" />
+    <style>
+      .bookdetail-container {
+        max-width: 1200px;
+        margin: 3rem auto;
+        padding: 0 2rem;
+      }
+
+      .bookdetail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        margin-bottom: 3rem;
+      }
+
+      .bookdetail-image {
+        text-align: center;
+      }
+
+      .bookdetail-image img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .bookdetail-info h1 {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        line-height: 1.2;
+      }
+
+      .bookdetail-author {
+        font-size: 1.3rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        font-style: italic;
+      }
+
+      .bookdetail-rating {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+      }
+
+      .bookdetail-rating .stars {
+        color: #fbbf24;
+        font-size: 1.5rem;
+      }
+
+      .bookdetail-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .bookdetail-actions .btn {
+        padding: 1.2rem;
+        font-size: 1.1rem;
+        font-weight: bold;
+      }
+
+      .bookdetail-meta {
+        background: var(--light-bg);
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+      }
+
+      .bookdetail-meta-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .bookdetail-meta-item:last-child {
+        border-bottom: none;
+      }
+
+      .bookdetail-meta-label {
+        font-weight: bold;
+        color: var(--primary-color);
+        min-width: 150px;
+      }
+
+      .bookdetail-meta-value {
+        color: var(--text-dark);
+        text-align: right;
+      }
+
+      .bookdetail-description {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 3rem;
+      }
+
+      .bookdetail-description h2 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+      }
+
+      .bookdetail-description p {
+        line-height: 1.8;
+        color: var(--text-dark);
+        text-align: justify;
+      }
+
+      .bookdetail-tabs {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      .bookdetail-tab {
+        padding: 1rem 2rem;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        font-weight: bold;
+        color: var(--text-light);
+        transition: all 0.3s;
+      }
+
+      .bookdetail-tab.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+      }
+
+      .bookdetail-tab-content {
+        display: none;
+      }
+
+      .bookdetail-tab-content.active {
+        display: block;
+      }
+
+      .related-books {
+        margin-top: 4rem;
+      }
+
+      .related-books h2 {
+        text-align: center;
+        color: var(--primary-color);
+        margin-bottom: 2rem;
+      }
+
+      .related-books-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 2rem;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: bold;
+        margin-bottom: 2rem;
+        transition: gap 0.3s;
+      }
+
+      .back-link:hover {
+        gap: 1rem;
+      }
+
+      @media (max-width: 768px) {
+        .bookdetail-grid {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+
+        .bookdetail-info h1 {
+          font-size: 1.8rem;
+        }
+
+        .bookdetail-actions {
+          grid-template-columns: 1fr;
+        }
+
+        .bookdetail-meta-item {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .bookdetail-meta-label,
+        .bookdetail-meta-value {
+          text-align: left;
+        }
+
+        .bookdetail-tabs {
+          flex-wrap: wrap;
+        }
+
+        .bookdetail-tab {
+          padding: 0.8rem 1rem;
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="logo" onclick="window.location.href='index.html'">
+          📚 PinjamBuku.
+        </div>
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">Beranda</a>
+          <a href="library.html" class="nav-link">Katalog</a>
+          <a href="borrowed.html" class="nav-link">Buku Saya</a>
+          <a href="index.html#about" class="nav-link">Tentang</a>
+        </div>
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          aria-label="Toggle dark mode"
+        >
+          <svg
+            class="sun-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg
+            class="moon-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+        <button class="burger-menu" id="burgerMenu" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Book Detail -->
+    <div class="bookdetail-container">
+      <a href="javascript:history.back()" class="back-link">← Kembali</a>
+
+      <div class="bookdetail-grid">
+        <div class="bookdetail-image">
+          <img id="bookImage" src="" alt="Book Cover" />
+        </div>
+        <div class="bookdetail-info">
+          <h1 id="bookTitle"></h1>
+          <div class="bookdetail-author" id="bookAuthor"></div>
+          <div class="bookdetail-rating">
+            <span class="stars" id="bookStars"></span>
+            <span id="bookRating"></span>
+          </div>
+
+          <div class="bookdetail-actions">
+            <button class="btn btn-detail" onclick="openDetails()">
+              Selengkapnya
+            </button>
+            <button id="borrowBtn" class="btn btn-borrow">Pinjam</button>
+          </div>
+
+          <div class="bookdetail-meta">
+            <div class="bookdetail-meta-item">
+              <span class="bookdetail-meta-label">Penerbit:</span>
+              <span class="bookdetail-meta-value" id="bookPublisher">-</span>
+            </div>
+            <div class="bookdetail-meta-item">
+              <span class="bookdetail-meta-label">Tanggal Terbit:</span>
+              <span class="bookdetail-meta-value" id="bookPublishDate">-</span>
+            </div>
+            <div class="bookdetail-meta-item">
+              <span class="bookdetail-meta-label">Halaman:</span>
+              <span class="bookdetail-meta-value" id="bookPages">-</span>
+            </div>
+            <div class="bookdetail-meta-item">
+              <span class="bookdetail-meta-label">Bahasa:</span>
+              <span class="bookdetail-meta-value" id="bookLanguage">-</span>
+            </div>
+            <div class="bookdetail-meta-item">
+              <span class="bookdetail-meta-label">Kategori:</span>
+              <span class="bookdetail-meta-value" id="bookCategories">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="bookdetail-tabs">
+        <button
+          class="bookdetail-tab active"
+          onclick="switchTab('description')"
+        >
+          Deskripsi
+        </button>
+        <button class="bookdetail-tab" onclick="switchTab('details')">
+          Detail Lebih Lanjut
+        </button>
+        <button class="bookdetail-tab" onclick="switchTab('reviews')">
+          Ulasan
+        </button>
+      </div>
+
+      <!-- Tab Content -->
+      <div id="description" class="bookdetail-tab-content active">
+        <div class="bookdetail-description">
+          <h2>Tentang Buku Ini</h2>
+          <p id="bookDescription"></p>
+        </div>
+      </div>
+
+      <div id="details" class="bookdetail-tab-content">
+        <div class="bookdetail-description">
+          <h2>Informasi Detail</h2>
+          <div id="detailsContent"></div>
+        </div>
+      </div>
+
+      <div id="reviews" class="bookdetail-tab-content">
+        <div class="bookdetail-description">
+          <h2>Ulasan Pembaca</h2>
+          <div id="reviewsContent"></div>
+        </div>
+      </div>
+
+      <!-- Related Books -->
+      <div class="related-books" id="relatedBooksSection" style="display: none">
+        <h2>Buku Serupa</h2>
+        <div id="relatedBooksGrid" class="related-books-grid"></div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>
+        &copy; 2025 PinjamBuku. - Perpustakaan Digital Sekolah. All rights
+        reserved.
+      </p>
+      <p>Powered by Google Books API & OpenLibrary API</p>
+    </footer>
+
+    <!-- Modal untuk detail buku -->
+    <div id="bookModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <div id="modalBody"></div>
+      </div>
+    </div>
+
+    <script src="language.js"></script>
+    <script src="settings.js"></script>
+    <script src="script-bookdetail.js"></script>
+    <script src="page-transition.js"></script>
+    <script>
+      // Initialize theme from localStorage
+      function initializeTheme() {
+        const savedTheme = localStorage.getItem("theme");
+        const html = document.documentElement;
+
+        if (savedTheme) {
+          if (savedTheme === "dark") {
+            html.classList.add("dark-mode");
+            updateThemeIcon(true);
+          }
+        } else {
+          if (
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+          ) {
+            html.classList.add("dark-mode");
+            updateThemeIcon(true);
+          }
+        }
+      }
+
+      function toggleTheme() {
+        const html = document.documentElement;
+
+        // Add transition class
+        html.classList.add("theme-transitioning");
+
+        const isDarkMode = html.classList.toggle("dark-mode");
+
+        localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+
+        // Remove transition class after animation completes
+        setTimeout(() => {
+          html.classList.remove("theme-transitioning");
+        }, 400);
+
+        updateThemeIcon(isDarkMode);
+
+        const themeToggle = document.getElementById("themeToggle");
+        if (themeToggle) {
+          themeToggle.classList.add("active");
+          setTimeout(() => {
+            themeToggle.classList.remove("active");
+          }, 600);
+        }
+      }
+
+      function updateThemeIcon(isDarkMode) {
+        // Icon transition handled by CSS now
+        // Just need to toggle the dark-mode class which is already done
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initializeTheme();
+        const themeToggle = document.getElementById("themeToggle");
+        if (themeToggle) {
+          themeToggle.addEventListener("click", toggleTheme);
+        }
+
+        // Burger menu functionality
+        const burgerMenu = document.getElementById("burgerMenu");
+        const navLinks = document.querySelector(".nav-links");
+
+        if (burgerMenu) {
+          burgerMenu.addEventListener("click", () => {
+            burgerMenu.classList.toggle("active");
+            navLinks.classList.toggle("active");
+          });
+
+          // Close menu when a link is clicked
+          const links = navLinks.querySelectorAll(".nav-link");
+          links.forEach((link) => {
+            link.addEventListener("click", () => {
+              burgerMenu.classList.remove("active");
+              navLinks.classList.remove("active");
+            });
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
